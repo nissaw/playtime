@@ -24,7 +24,7 @@ class Letter extends Component {
 
   changeCase = () => {
     this.setState(state => ({
-      case: 1 - state.case
+      case: 1 - state.case // toggle 0 to 1
     }));
   }
 }

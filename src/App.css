@@ -18,8 +18,33 @@
   color: white;
 }
 
+.App-footer {
+  background-color: #282c34;
+  display: flex;
+  flex-direction: column;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  color: gray;
+}
+.App-footer a {
+  color: gray;
+}
+
 .App-link {
   color: #61dafb;
+}
+
+button {
+  background-color: inherit;
+  border: 1px solid lightgray;
+  border-radius: 4px;
+  color: lightgray;
+  cursor: pointer;
+  font-size: 1em;
+  margin: 5px;
+  padding: 10px;
 }
 
 @keyframes App-logo-spin {

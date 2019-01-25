@@ -1,0 +1,44 @@
+.keyboard-container {
+  display: flex;
+  flex-direction: column;
+  width: 60vw;
+}
+
+.keyboard {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.action-group {
+  display: flex;
+  justify-content: center;
+}
+
+.action-group button {
+  flex-grow: 1;
+  margin: 10px;
+  padding: 20px 50px;
+  color: salmon;
+  border-color: salmon;
+}
+
+.key-container {
+  display: flex;
+  flex: 1 0 8%;
+  justify-content: center;
+  align-content: center;
+  cursor: pointer;
+  border: 1px solid lightgray;
+  border-radius: 4px;
+  font-size: 24px;
+  padding: 25px;
+  margin: 10px;
+}
+
+.key-container.selected {
+  background-color: salmon;
+  border-color: salmon;
+  border-width: 2px;
+}

@@ -1,91 +1,76 @@
 import React, { Component } from 'react';
+import { Router } from '@reach/router';
 import './App.css';
-import Letter from './Letter';
+import Quiz from './Quiz';
+import Keyboard from './Keyboard';
+import { LETTER_GROUPS } from './Constants';
 
-const letter_groups = {
-  vowels: ['a', 'e', 'i', 'o', 'u'],
-  consonants: ['b','c','d','f','g','h','j','k','l','m','n','p','q','r','s','t','v','w','x','y','z']
-};
 
 class App extends Component {
-  constructor(){
+  constructor (){
     super();
     this.state = {
-      letter: this.getRandom(letter_groups.vowels)
+      vowels: {},
+      consonants: {}
     }
-    this.randomBlend = this.randomBlend.bind(this)
-    this.cycleVowels = this.cycleVowels.bind(this)
-    this.cycleConsonants = this.cycleConsonants.bind(this)
+  }
+
+  loadDefaultLetters = () => {
+    this.setState({vowels: LETTER_GROUPS.english.vowels, consonants: LETTER_GROUPS.english.consonants})
+  }
+
+  allowedLetters = (charset) => {
+    return Object.keys(charset).filter(l => charset[l].selected);
+  }
+
+  componentDidMount() {
+    // first reinstate our localStorage
+    const localStorageRef = localStorage.getItem("letterLou");
+    if (localStorageRef) {
+      let { vowels, consonants } = JSON.parse(localStorageRef);
+      this.setState({ vowels, consonants });
+    } else {
+      this.loadDefaultLetters();
+    }
+  }
+
+  componentDidUpdate() {
+    localStorage.setItem("letterLou", JSON.stringify(this.state));
+  }
+
+  updateChar = (char, charGroupName) => {
+    // 1. Take a copy of the current state
+    const charset = { ...this.state[charGroupName] };
+    // 2. Update that state
+    charset[char].selected = !charset[char].selected;
+    // 3. Set that to state
+    this.setState({ [charGroupName] : charset });
+  }
+
+  selectAll = () => {
+    const vowels = { ...this.state.vowels };
+    const consonants = { ...this.state.consonants };
+    Object.keys(vowels).forEach(l => vowels[l].selected = true);
+    Object.keys(consonants).forEach(l => consonants[l].selected = true);
+    this.setState({ vowels, consonants });
   }
 
   render() {
+    let allowedVowels = this.allowedLetters(this.state.vowels);
+    let allowedConsonants = this.allowedLetters(this.state.consonants);
     return (
       <div className="App">
         <header className="App-header">
-
-          <Letter name={this.state.letter}></Letter>
-          <div style={{display:"flex",justifyContent: "center"}}>
-            <div style={{border:"1px solid salmon",marginRight:"5px",padding:"10px"}}>
-              <h3>Single Letters</h3>
-              <button onClick={(e) => this.changeLetter(letter_groups.vowels)}>Get a new vowel</button>
-              <button onClick={(e) => this.changeLetter(letter_groups.consonants)}>Get a new consonant</button>
-            </div>
-            <div style={{border:"1px solid lightgray",marginLeft:"5px",padding:"10px"}}>
-              <h3>Vowel Blends</h3>
-              <button onClick={this.randomBlend}>Random Blend</button>
-              <button onClick={this.cycleVowels}>Cycle Vowels</button>
-              <button onClick={this.cycleConsonants}>Cycle Consonants</button>
-            </div>
-          </div>
-          <h5>Click the letter to switch between upper and lower case!</h5>
+        <Router>
+          <Quiz path="/" vowels={allowedVowels} consonants={allowedConsonants}></Quiz>
+          <Keyboard vowels={this.state.vowels} consonants={this.state.consonants} updateChar={this.updateChar} selectAll={this.selectAll} path="/keyboard"></Keyboard>
+        </Router>
         </header>
+        <footer className="App-footer"><div>Icons made by <a href="https://www.flaticon.com/authors/gregor-cresnar" title="Gregor Cresnar">Gregor Cresnar</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank" rel="noopener noreferrer">CC 3.0 BY</a></div></footer>
       </div>
     );
   }
-  randomBlend = () => {
-    this.setState(state => ({
-      letter: `${this.getRandom(letter_groups.consonants)}${this.getRandom(letter_groups.vowels)}`
-    }))
-  }
 
-  cycleVowels = () => {
-    let vowel = this.state.letter[this.state.letter.length-1];
-    let consonant = this.state.letter.length === 2 ? this.state.letter[0] : "";
-    
-    this.setState(state => ({
-      letter: `${consonant}${this.getNextLetter(letter_groups.vowels, vowel)}`
-    }))
-  }
-
-
-  cycleConsonants = () => {
-    let vowel = this.state.letter.length === 2 ? this.state.letter[1] : "";
-    let consonant = this.state.letter[0];
-
-    this.setState(state => ({
-      letter: `${this.getNextLetter(letter_groups.consonants, consonant)}${vowel}`
-    }))
-  }
-
-  getNextLetter = (list, letter) => {
-    let currIdx = list.indexOf(letter);
-    if (currIdx !== -1 && currIdx < list.length - 1) {
-      return list[++currIdx];
-    } else {
-      return list[0];
-    }
-  }
-
-  getRandom = (list) => {
-    let idx = Math.floor(Math.random() * list.length);
-    return list[idx];
-  }
-
-  changeLetter = (list) => {
-    this.setState(state => ({
-      letter: this.getRandom(list)
-    }));
-  }
 }
 
 export default App;
