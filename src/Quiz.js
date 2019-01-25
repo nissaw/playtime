@@ -17,6 +17,7 @@ class Quiz extends Component {
 
   static getDerivedStateFromProps (props, state){
     if (!state.letter) return { letter: props.vowels[0] }
+    else return null;
   }
   
   render() {

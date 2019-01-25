@@ -26,12 +26,12 @@ class Keyboard extends React.Component {
       <div className="keyboard-container">
         <h3>VOWELS</h3>   
         <div className="keyboard" style={{ textTransform: `${CASE[this.state.case]}` }}>
-          {Object.keys(vowels).map(v => <Key char={v} selected={vowels[v].selected} updateChar={updateChar} charset="vowels"></Key>)}
+          {Object.keys(vowels).map(v => <Key char={v} key={v} selected={vowels[v].selected} updateChar={updateChar} charset="vowels"></Key>)}
         </div>
 
         <h3>CONSONANTS</h3>
         <div className="keyboard" style={{ textTransform: `${CASE[this.state.case]}` }}>
-          {Object.keys(consonants).map(v => <Key char={v} selected={consonants[v].selected} updateChar={updateChar} charset="consonants"></Key>)}
+          {Object.keys(consonants).map(v => <Key char={v} key={v} selected={consonants[v].selected} updateChar={updateChar} charset="consonants"></Key>)}
         </div>
 
         <div className="action-group">
